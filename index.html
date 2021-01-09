@@ -1,0 +1,696 @@
+<!doctype html>
+<!--Gears 1.1 by w01000001ssim-->
+<!--1/1/2018-->
+<html>
+<head>
+    <style>
+    body{padding: 0px;margin: 0px; overflow: hidden;background-color: #366af5;;}
+html{padding: 0px;margin: 0px;overflow: hidden}
+#canv{
+    /*background-color: #366af5;*/
+    background-color: #366af5;;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+        #zoom{
+            position: absolute;
+            width: 70px;
+            bottom: 0;
+            right: 0;
+            display: table;
+            
+        }
+        #z1,#z2{
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 0 10px 0 white;
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            background: radial-gradient(rgb(66, 48, 80),#1d1422);
+            color: white;
+           text-align: center;
+display:table-cell;
+vertical-align:middle;
+            font-size: 30px;
+            font-family: sans-serif;
+            border: 1px solid rgb(36, 24, 46);
+            
+        }
+#inputs{
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(0deg, #1d1422, rgb(66, 48, 80));
+    color: white;
+    padding: 10px;
+    top: 0;
+    padding: 20px;
+    /*background-color: "#35273e";*/
+
+    box-shadow:  0 0 50px 1px rgba(255, 255, 255, 0.44);
+    
+}
+input{
+    border: 1px solid black;
+    border-radius: 5px;
+    
+    padding-left:7px;
+    background-color: #423050;
+    box-shadow: inset 0px 0px 5px 0px #6f6f6f ;
+    transition: 0.2s;
+    color: white;
+    margin: 1px;
+    width: 90px;
+    font-size: 18px;
+    font-family:monospace;
+    
+
+   
+    
+}
+input:hover{
+    box-shadow: inset 0px 0px 20px 0px #6f6f6f ;
+    
+    transition: 0.2s;
+}
+label{
+    
+
+}
+table{
+    
+    vertical-align: middle;
+    width: 100%;
+   border-spacing: 0px;
+    font-size: 18px;
+    
+}
+#resaults{
+}
+td{
+    width: 50px;
+}
+#resaults td{
+    box-shadow:  0px 0px 3px 0px #6f6f6f ;
+    padding: 2px
+}
+#separator{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: black;
+    width: 100%;
+    height: 1px;
+    box-shadow:  0px 0px 5px 1px #6f6f6f ;
+}
+
+    </style>
+    </head>
+     <body>
+    
+<canvas id="canv" width="500" height="500"></canvas>
+        <div id="zoom">
+        <button id="z1" onclick="if(zoom<hh){zoom+=20;}">+</button>
+            <button id="z2" onclick="if(zoom>50){zoom-=20;}">-</button>
+            </div>
+        <div id="inputs">
+       
+            
+            
+            
+            <table>
+            <tr>
+            <td><label>N1 = </label></td>    
+            <td><input value='720' id="n1" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || event.keyCode == 35 || event.keyCode == 36 || event.keyCode == 46'></td>    
+            <td><label>tr/min</label></td>    
+            </tr>
+            <tr>
+            <td><label>N2 = </label></td>    
+            <td><input value='240' id="n2" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || event.keyCode == 35 || event.keyCode == 36 || event.keyCode == 46'></td>    
+            <td><label>tr/min</label></td>    
+            </tr>
+            <tr>
+            <td> <label>P = </label></td>    
+            <td><input value='3680' id="p" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || event.keyCode == 35 || event.keyCode == 36 || event.keyCode == 46'></td>    
+            <td><label>W</label></td>    
+            </tr>
+            <tr>
+            <td> <label>a = </label></td>    
+            <td><input value='240' id="a" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || event.keyCode == 35 || event.keyCode == 36 || event.keyCode == 46'></td>    
+            <td><label>mm</label></td>    
+            </tr>
+            <tr>
+            <td> <label>&delta; = </label></td>    
+            <td><input value='30' id="q" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 16 || event.keyCode == 35 || event.keyCode == 36 || event.keyCode == 46'></td>    
+            <td><label>MPa</label></td>    
+            </tr>
+
+
+
+                
+                <tr>
+            <td> <label>&beta; = </label></td>    
+            <td><input value='25' id="beta" type="number" min="0" onchange=';recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13 || event.charCode == 8 || event.charCode == 9 || event.charCode == 16 || event.charCode == 35 || event.charCode == 36 || event.charCode == 46'></td>    
+            <td><label>&deg;</label></td>    
+            </tr>
+                
+                           <tr>
+            <td> <label>K = </label></td>    
+            <td><input disabled style="" value='8' id="k" type="number" min="1" onchange='recalculate()' onkeypress='return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13 || event.charCode == 8 || event.charCode == 9 || event.charCode == 16 || event.charCode == 35 || event.charCode == 36 || event.charCode == 46'></td>    
+            <td><label></label></td>    
+            </tr>
+                
+            </table>
+            
+     
+            
+<div id="separator"></div>
+        
+            <table id="resaults" style="text-align: center">
+                
+               
+
+            </table>
+            
+        </div>
+        
+    </body>
+</html>
+<script>
+
+//nan demo dekiru to omotta
+canv = document.getElementById('canv');
+c= canv.getContext('2d');
+ww =window.innerWidth;
+hh = window.innerHeight;
+canv.width=ww;
+canv.height=hh;
+first_run=true;
+zoom=100;
+gear_x=ww/2;
+gear_y=hh/2;
+/*function Gear(z,r,ofst,ofst2,rot,p,m,ha,hf){
+//number of teeth
+    this.z=z;  
+    this.r=r;
+    this.ofst2=ofst2;
+    this.ofst=ofst;
+    this.rot=rot;
+    this.p=p;
+    this.m=m;
+    this.ha=ha;
+    this.hf=hf;
+    this.h=ha+hf;
+    
+}*/
+
+function gear(N1,N2,P,a,Q,b){
+    //convert angle from ° to rad
+    //180-----3.14
+    //b------?
+    //?=b*3.17/180
+    if(b==0){
+        K=document.getElementById("k").value;
+        document.getElementById("k").removeAttribute("disabled");
+        document.getElementById("k").style.backgroundColor="#342a3c";
+    }else if(b<=45 && b>0){
+    K=Math.PI/Math.sin((b*Math.PI)/180);
+        //K=normalize(K);
+        K=Math.ceil(K);if(K==181){K=10};
+         document.getElementById("k").setAttribute("disabled","");
+        document.getElementById("k").style.backgroundColor="#423050";
+        document.getElementById("k").value=K;
+    }else if(b>45){
+    document.getElementById("beta").value =45;b=45;
+    K=Math.PI/Math.sin((b*Math.PI)/180);
+        //K=normalize(K);
+        K=Math.ceil(K);if(K==181){K=10};
+          document.getElementById("k").setAttribute("disabled","");
+        document.getElementById("k").style.backgroundColor="#423050";
+        document.getElementById("k").value=K;
+             }
+    k=K;
+    //converting rotation speed from tr/min to rad/s
+    w1 = (N1*2*Math.PI)/60;
+    w2 = (N2*2*Math.PI)/60;
+    //converting Q from mega pascale to pascale
+    Q*=1000000;
+     gear_ratio=N2/N1;
+    d2=parseFloat(((a*2)/(gear_ratio+1)).toFixed(2));
+    
+    d1=parseFloat((a*2-d2).toFixed(2));
+
+    C1 =parseFloat((P/w1).toFixed(2));
+    T=parseFloat((2*C1/(d1*0.001*Math.cos((b*Math.PI)/180))).toFixed(2));
+    m=2.34*Math.sqrt(T/(K*Q));
+    m*=1000;
+    //standard module values
+    //console.log(m);
+    mr=normalize(m);
+    ma=mr/Math.cos((b*Math.PI)/180);
+    m=ma;
+  //console.log(m);
+    z1=d1/m;
+    z1=Math.floor(z1);
+    z2=z1/gear_ratio;
+    //this one checks that the number of teeth on the second gear is even, inorder to synchronize the motion of the teeth
+    
+    while(!(z2%2==0)){
+        console.log(z2);
+       z1++;
+        z2=z1/gear_ratio;
+       }
+    
+    
+    //new diameters
+    new_d1=parseFloat((z1*m).toFixed(2));
+    new_d2=parseFloat((z2*m).toFixed(2));
+    
+    r1=new_d1/2;
+    r2=new_d2/2;
+    
+            final_rotation_speed1=0.02;
+final_rotation_speed2=0.02*w2/w1;
+    standard_radius1=zoom;
+    standard_radius2=zoom*w1/w2;
+    gear_x=ww/2-zoom;
+    //z2=Math.round(z2);
+   /* while(final_rotation_speed1>0.01 || final_rotation_speed2>0.01){
+          final_rotation_speed1/=10;
+          final_rotation_speed2/=10;
+          }
+*/
+    get_resaults();
+if(first_run){
+    animate();
+    first_run=false;
+}
+    
+}
+
+rot=0;
+rot1=0;
+rot2=0;
+rotation_speed1=0;
+rotation_speed2=0;
+line_color="#fff";
+function normalize(m){
+    if(m<=0.5){
+        m=0.5;
+    }else if(m<=0.6){
+                m=0.6;
+                }else if(m<=0.8){
+                m=0.8;
+                }else if(m<=1){
+                m=1;
+                }else if(m<=1.25){
+                m=1.25;
+                }else if(m<=1.5){
+                m=1.5;
+                }else if(m<=2){
+                m=2;
+                }else if(m<=2.5){
+                m=2.5;
+                }else if(m<=3){
+                m=3;
+                }else if(m<=4){
+                m=4;
+                }else if(m<=5){
+                m=5;
+                }else if(m<=6){
+                m=6;
+                }else if(m<=8){
+                m=8;
+                }else if(m<=10){
+                m=10;
+                }else if(m<=12){
+                m=12;
+                }else if(m<=16){
+                m=16;
+                }else if(m<=20){
+                m=20;
+                }else if(m<=25){
+                m=25;
+                }else if(m<=32){
+                m=32;
+                }else if(m<=40){
+                m=40;
+                }else if(m<=50){
+                m=50;
+                }
+    return m;
+}
+gear(720,240,3680,240,30,25);
+function draw_gear(x,y,r,z,real_r){
+   c.lineWidth=1;
+
+ofst=z*100;
+ofst2=z*4;
+        p=(r*2*Math.PI)/z;
+m=p/Math.PI;
+    ha=m;
+    hf=1.25*m;
+    h=2.25*m;
+    z*=2;
+c.strokeStyle=line_color;
+    for(var i=0;i<z+1;i+=2){
+    c.beginPath();
+        c.arc(x,y,r-hf,rot+(2*Math.PI/z)*i                          ,rot+(2*Math.PI/z)*(i+1)); 
+        c.arc(x,y,r,   rot+((2*Math.PI/z)*(i+1))+(Math.PI/(ofst))   ,rot+((2*Math.PI/z)*(i+2))-(Math.PI/(ofst)));         // ----
+        c.arc(x,y,r,   rot+((2*Math.PI/z)*(i+2))-(Math.PI/(ofst))   ,rot+((2*Math.PI/z)*(i+1))+(Math.PI/(ofst)),true);    // ----
+        c.arc(x,y,r+ha,rot+((2*Math.PI/z)*(i+1))+(Math.PI/(ofst2))  ,rot+((2*Math.PI/z)*(i+2))-(Math.PI/(ofst2)));
+        c.arc(x,y,r,   rot+((2*Math.PI/z)*(i+2))-(Math.PI/(ofst))   ,rot+((2*Math.PI/z)*(i+1))+(Math.PI/(ofst)),true);    // ----
+        c.arc(x,y,r,   rot+((2*Math.PI/z)*(i+1))+(Math.PI/(ofst))   ,rot+((2*Math.PI/z)*(i+2))-(Math.PI/(ofst)));         // ----
+        c.arc(x,y,r-hf,rot+(2*Math.PI/z)*(i+2)                      ,rot+(2*Math.PI/z)*(i+3));
+    //c.stroke();
+
+        c.fillStyle="rgba(255, 255, 255, 0.8)"
+       c.fill();
+        c.beginPath();
+        //the little circle to indecate rotation
+c.arc(x+(r-hf-r/6)*Math.cos(rot),y+(r-hf-r/6)*Math.sin(rot),2,0,Math.PI*2); 
+        //the little square to indecate rotation
+        c.fillStyle="#fff";
+      //  c.fillRect(x+(r-hf-r/6)*Math.cos(rot),y+(r-hf-r/6)*Math.sin(rot),4,4);
+        
+        
+    c.stroke();
+        
+    }
+            final_rotation_speed1=0.02;
+final_rotation_speed2=0.02*w2/w1;
+    standard_radius1=zoom;
+    standard_radius2=zoom*w1/w2;
+    gear_x=ww/2-zoom;
+    //diameter primitif
+    /*c.strokeStyle="rgba(255, 255, 255, 0.5)";
+    c.beginPath();
+    c.arc(x,y,r,0,Math.PI*2); 
+    c.stroke();
+    //diameter exterieur
+    c.beginPath();
+    c.arc(x,y,r+ha,0,Math.PI*2); 
+    c.strokeStyle="rgba(255, 255, 255, 0.5)";
+    c.stroke();
+    //diameter de bass
+   */c.beginPath();
+    c.arc(x,y,r-hf,0,Math.PI*2); 
+    c.strokeStyle="rgba(255, 255, 255, 0.5)";
+    c.fillStyle="rgba(255, 255, 255, 0.2)"
+    c.fill();
+    //c.stroke();
+    //center cross lines and circle
+  c.strokeStyle="rgba(255, 255, 255, 0.8)";
+    c.beginPath();
+    c.arc(x,y,10,0,Math.PI*2);
+    c.moveTo(x-20,y);
+    c.lineTo(x+20,y);
+     c.moveTo(x,y-20);
+    c.lineTo(x,y+20);
+    c.stroke();
+    
+    
+    
+    
+    //vertical lines
+ /*   c.moveTo(x,0);
+    c.lineTo(x,hh);
+    c.moveTo(x+r,0);
+    c.lineTo(x+r,hh);
+    c.stroke();*/
+    
+    /*draw_line(x,y,x+(r+ha)*Math.cos(0),y+(r+ha)*Math.sin(0));
+    draw_line(x,y,x+r*Math.cos((0)-0.785),y+r*Math.sin((0)-0.785));
+    draw_line(x,y,x+(r-hf)*Math.cos((0)-1.57),y+(r-hf)*Math.sin((0)-1.57));*/
+    
+    curly(x-r,y+get_bigger_radius()+ha+10,x+r,y+r);
+     c.moveTo(x,y+r/5);
+     c.textAlign='center';
+    c.font="20px font";
+    r=parseFloat(r.toFixed(2));
+    c.fillStyle="#ffffff";
+    c.fillText((real_r*2)+" mm",x,20+y+r/5+get_bigger_radius()+ha+20);
+
+    curly(gear_x,gear_y,gear_x+standard_radius1+standard_radius2,gear_y);
+    c.fillText(((r1+r2).toFixed(2))+" mm",gear_x+(standard_radius1+standard_radius2)/2,gear_y+(standard_radius1+standard_radius2)/8+20);
+    
+    
+    
+    
+}
+
+function get_resaults(){
+    
+    document.getElementById("resaults").innerHTML=`
+
+                    <tr>
+                    <th>Relations</td>
+                    <th>Pignon</td>
+                    <th>Roue</td>
+                    </tr>
+
+                     <tr>
+                    <td>Z</td>
+                    <td>`+z1+`</td>
+                    <td>`+z2+`</td>
+                    </tr>
+
+                    <tr>
+                    <td>d=m.Z</td>
+                    <td>`+new_d1+`</td>
+                    <td>`+new_d2+`</td>
+                    </tr>
+                        
+                    <tr>
+                    <td>da=d+2 m</td>
+                    <td>`+(new_d1+2*m).toFixed(2)+`</td>
+                    <td>`+(new_d2+2*m).toFixed(2)+`</td>
+                    </tr>
+
+                    <tr>
+                    <td>df=d-2.5 m</td>
+                    <td>`+(new_d1-2.5*m).toFixed(2)+`</td>
+                    <td>`+(new_d2-2.5*m).toFixed(2)+`</td>
+                    </tr>
+
+                    <tr>
+                    <td>h=2.25 m</td>
+                    <td colspan='2' >`+(2.25*m).toFixed(2)+`</td>
+                 
+                    </tr>
+
+                    <tr>
+                    <td>hf=1.25 m</td>
+                    <td colspan='2' >`+(1.25*m).toFixed(2)+`</td>
+                
+                    </tr>
+
+                    <tr>
+                    <td>ha=m</td>
+                    <td colspan='2' >`+m.toFixed(2)+`</td>
+              
+                    </tr>
+
+                    <tr>
+                    <td>b=k.m</td>
+                    <td colspan='2' >`+(k*m).toFixed(2)+`</td>
+                  
+                    </tr>
+
+                    <tr>
+                    <td>p=&pi;.m</td>
+                    <td colspan='2' >`+(3.14*m).toFixed(2)+`</td>
+                    
+                    </tr>
+                    
+                    <tr>
+                    <td>l=&pi;.m/2</td>
+                    <td colspan='2' >`+(3.14*m/2).toFixed(2)+`</td>
+                   
+                    </tr>
+
+                    <tr>
+                    <td>e=&pi;.m/2</td>
+                    <td colspan='2' >`+(3.14*m/2).toFixed(2)+`</td>
+                    
+                    </tr>
+
+                    <tr>
+                    <td>m&ge;&radic;(T/(K.&delta;))</td>
+                    <td colspan='2' >`+m.toFixed(2)+`</td>
+                    
+                    </tr>
+
+                     <tr>
+                    <td>R=z1/z2</td>
+                    <td colspan='2' >`+gear_ratio.toFixed(2)+`</td>
+                    
+                    </tr>
+
+                    <tr>
+                    <td>a=(d1+d2)/2</td>
+                    <td colspan='2' >`+(parseFloat(((new_d1+new_d2)/2).toFixed(2)))+`</td>
+                    
+                    </tr>
+`;
+
+}
+function get_bigger_radius(){
+    if(standard_radius1>standard_radius2){return standard_radius1}else{return standard_radius2};
+}
+function draw_line(x1,y1,x2,y2){
+    var d=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+    var dx=x2-x1;
+    var dy=y2-y1;
+    c.beginPath();
+    c.moveTo(x1,y1);
+    c.lineTo(x2,y2);
+    c.moveTo(x2,y2);
+    c.arc(x2,y2,3,0,Math.PI*2);
+    c.stroke();
+    /*c.fillStyle="#fff";
+    c.fill();*/
+}
+function curly(x1,y1,x2,y2){
+    c.beginPath();
+    //bezier curve i'd like to do it but i will regret it, waste of time but fun idk
+    //onlyalong the x axyz
+    var dis=Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+    var dx=x2-x1;
+    var dy=y2-y1;
+    c.strokeStyle="#ffffff";
+
+    c.moveTo(x1,y1);
+    //c.bezierCurveTo(x1,y1+50,x1+100,y1,x1+120,y1+50);
+    c.bezierCurveTo(x1,y1+dis/8,x1+dx/2-dx/10,y1,x1+dx/2,y1+dis/8);
+    c.moveTo(x1+dx,y1);
+    c.bezierCurveTo(x1+dx,y1+dis/8,x1+dx-dx/2+dx/10,y1,x1+dx-dx/2,y1+dis/8);
+   
+   
+    
+    //c.bezierCurveTo(x1+dx,y1+50,x1+dx-dx/2+dx/10,y1,x1+dx-dx/2,y1+50);
+    //c.bezierCurveTo(x+150,y,x+100,y,x,y+50);
+    //c.bezierCurveTo(x+240,y+50,x-100+240,y,x-120+240,y+50);
+    //c.bezierCurveTo(x,y+50,x-100,y,x-120,y+50);
+    //c.bezierCurveTo(x+240,y+50,x-100+240,y,x2,y2);
+    c.stroke();
+    
+}
+
+
+function animate(){
+//window.setTimeout(animate,1);
+    requestAnimationFrame(animate);
+    
+    //every second it rotates 125rad
+    //and we update every 0.001 s
+    //aproximately it updates 1000 times every second 
+   // if(rot>2*Math.PI){
+   //     rot=0;
+   // }else{
+  /*  if(rotation_speed1<final_rotation_speed1){
+        rotation_speed1+=final_rotation_speed1/3;
+    }
+    if(rotation_speed2<final_rotation_speed2){
+        rotation_speed2+=final_rotation_speed2/3;
+    }*/
+
+    
+      rot1+=final_rotation_speed1; 
+      rot2+=final_rotation_speed2; 
+   // }
+//c.clearRect(0,0,1366,768);
+    /*c.fillStyle="rgba(54, 106, 245, 0.7)";*/
+    c.fillStyle="#366af5";
+c.fillRect(0,0,ww,hh);
+draw_grid();
+   
+    rot=rot1;
+   // rot=-rot;
+//draw_gear(300-50,300-50,500,200);
+draw_gear(gear_x,gear_y,standard_radius1,z1,r1);
+    rot=-rot2;
+    //rot=rot;
+draw_gear(gear_x+(standard_radius2+standard_radius1),gear_y,standard_radius2,z2,r2);
+
+    ////console.log(rot);
+}
+
+window.addEventListener("keydown",function(e){
+    //console.log(e.keyCode);
+    //+
+    if(e.keyCode==107 && zoom<hh){
+        zoom+=20;
+    }else if(e.keyCode==109 && zoom>50){
+             
+        zoom-=20;
+             }
+    //-
+    
+});
+    
+    
+    
+    
+
+function draw_grid(){
+        var x = 1;
+        var y = 1;
+        c.lineWidth=2;
+    c.strokeStyle="rgba(255, 255, 255, 0.25)";
+    while(gear_x-standard_radius1*x>0){
+   c.moveTo(gear_x-standard_radius1*x,0);
+    c.lineTo(gear_x-standard_radius1*x,hh);
+x++;
+    }
+    x=0;
+        while(gear_x+standard_radius1*x<ww){
+   c.moveTo(gear_x+standard_radius1*x,0);
+    c.lineTo(gear_x+standard_radius1*x,hh);
+x++;
+    }
+    
+    while(gear_y-standard_radius1*y>0){
+    c.moveTo(0,gear_y-standard_radius1*y);
+    c.lineTo(ww,gear_y-standard_radius1*y);
+y++;
+    }
+    y=0;
+       while(gear_y+standard_radius1*y<hh){
+    c.moveTo(0,gear_y+standard_radius1*y);
+    c.lineTo(ww,gear_y+standard_radius1*y);
+y++;
+    }
+    
+    
+    c.stroke();
+}
+
+function recalculate(){
+    try{
+        
+    
+        get_resaults();
+rot1=0;
+rot2=0;
+    rot=0;
+                       
+        
+    gear(Math.abs(document.getElementById("n1").value),
+         Math.abs(document.getElementById("n2").value),
+         Math.abs(document.getElementById("p").value),
+         Math.abs(document.getElementById("a").value),
+         Math.abs(document.getElementById("q").value),
+         Math.abs(document.getElementById("beta").value));
+        }catch(e){}
+}
+    
+</script>
+
+
+<!--
+Any suggestionns or ideas email me at w01000001ssim@gmail.com
+i'll be surprized if anyone reads this
+-->
